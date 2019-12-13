@@ -6,7 +6,7 @@ An ERC721 non-fungible token to claim ownerships of any stars in the sky.
     - Symbol: SNT
 
 ## Requirements for current build
-- openzeppelin-solidity == 2.1.2
+- openzeppelin-solidity == 2.4.0
 - Truffle == 5.1.3
 
 ## Usage
