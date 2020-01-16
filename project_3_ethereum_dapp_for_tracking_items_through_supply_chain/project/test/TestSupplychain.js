@@ -41,6 +41,25 @@ contract('SupplyChain', function(accounts) {
     console.log("Retailer: accounts[3] ", accounts[3])
     console.log("Consumer: accounts[4] ", accounts[4])
 
+    // Test bed init
+    it("Preparing testing environment", async() => {
+        const supplyChain = await SupplyChain.deployed()
+        await supplyChain.addFarmer(originFarmerID)
+        isFarmer = await supplyChain.isFarmer(originFarmerID)
+        await supplyChain.addDistributor(distributorID)
+        isDistributor = await supplyChain.isDistributor(distributorID)
+        await supplyChain.addRetailer(retailerID)
+        isRetailer = await supplyChain.isRetailer(retailerID)
+        await supplyChain.addConsumer(consumerID)
+        isConsumer = await supplyChain.isConsumer(consumerID)
+
+        // Verify the result set
+        assert.equal(isFarmer, true, 'Unable to assign farmer')
+        assert.equal(isDistributor, true, 'Unable to assign distributor')
+        assert.equal(isRetailer, true, 'Unable to assign retailer')
+        assert.equal(isConsumer, true, 'Unable to assign consumer')
+    })
+
     // 1st Test
     it("Testing smart contract function harvestItem() that allows a farmer to harvest coffee", async() => {
         const supplyChain = await SupplyChain.deployed()
