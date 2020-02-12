@@ -131,9 +131,8 @@ export default class Contract {
             console.log('Event type is : ' + event.event)
             if (error) console.log('Error in reading event : ' + error)
             else {
-                if (event.event === 'AirlineRegistered') {
+                if (event.event === 'AirlineRegisterSubmitted') {
                     console.log('Event (AirlineRegistered) emited from smart contract : ' + JSON.stringify(event.returnValues))
-
                     console.log('Event (AirlineRegistered) emited from smart contract : ' + JSON.stringify(result))
                 }
             }
@@ -156,29 +155,6 @@ export default class Contract {
                     }
                     callback(error, result);
                     console.log('Event (AirlineFunded) emited from smart contract : ' + JSON.stringify(event.returnValues))
-                }
-            }
-        });
-    }
-
-
-    onEventFlightRegistered(callback) {
-        let self = this;
-        this.flightSuretyApp.events.FlightRegistered({
-            fromBlock: "latest"
-        }, function (error, event) {
-            console.log('Event type is : ' + event.event)
-            if (error) console.log('Error in reading event : ' + error)
-            else {
-                if (event.event === 'FlightRegistered') {
-                    let result = {
-                        event: event.event,
-                        airline: event.returnValues.airline,
-                        flight: event.returnValues.flight,
-                        timestamp: event.returnValues.timestamp
-                    }
-                    callback(error, result);
-                    console.log('Event (FlightRegistered) emited from smart contract : ' + JSON.stringify(event.returnValues))
                 }
             }
         });
@@ -214,7 +190,7 @@ export default class Contract {
             console.log('Event type is : ' + event.event)
             if (error) console.log('Error in reading event : ' + error)
             else {
-                if (event.event === 'InsuranceCredited') {
+                if (event.event === 'InsureesCredited') {
                     let result = {
                         event: event.event,
                         passenger: event.returnValues.passenger,
