@@ -13,18 +13,57 @@
 
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
         <a class="navbar-brand" href="#">FlightSurety</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault"
-            aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+            aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
     </nav>
 
     <main class="container">
+        <div id="display-status" class="top-20">
+        </div>
+        <div class="top-20">
+            <h1 id="global-heading"></h1>
+            <p id="global-result" style="color:green"></p>
+            <p id="global-error" style="color:red"></p>
+        </div>
 
-        <div id="display-wrapper" class="top-20">
+        <div id="airlines-wrapper" class="top-20">
+        </div>
+        <h4>Register Airline</h4>
+        <div class="row top-20">
+            <label class="form">Register Airline (address)</label> <input type="text" value="" id="airline-address">
+            <btn class="btn btn-primary" id="register-airline">Register Airline</btn>
+        </div>
+
+        <div class="row top-20">
+            <label class="form">Fund Airline(Ether)</label> <input type="text" value="" id="seed-funding">
+            <btn class="btn btn-primary" id="fund-airline">Fund Airline</btn>
+        </div>
+
+        <div id="flights-wrapper" class="top-20"></div>
+        <btn class="btn btn-primary" id="get-flights">Register flights</btn>
+
+
         </div>
         <div class="row top-20">
-            <label class="form">Flight</label> <input type="text" id="flight-number"> <btn class="btn btn-primary" id="submit-oracle">Submit to Oracles</btn>
+            <label class="form">Purchase Insurance</label>
+            <input type="text" value="SV-NYC" id="flight-number">
+            <label>Amount(Ether)</label>
+            <input type="text" value="1" length="10" id="insurance-amount">
+            <select id="passenger-id">
+            </select>
+            <btn class="btn btn-primary" id="purchase-insurance">Purchase</btn>
+        </div>
+
+        <h4>Oracles</h4>
+        <div class="row top-20">
+            <label class="form">Flight</label> <input type="text" id="flight-number">
+            <btn class="btn btn-primary" id="submit-oracle">Submit to Oracles</btn>
+        </div>
+        <div id="display-wrapper" class="top-20">
+        </div>
+        <div id="insurance-wrapper" class="top-20">
         </div>
     </main>
 
