@@ -32,6 +32,8 @@ To view dapp:
 `npm run server`
 `truffle test ./test/oracles.js`
 
+Increase the number of accounts to 40 in Ganache to test. HDWalletProvider cannot be used for an error of ```the tx doesn't have the correct nonce. account has nonce of: xx tx has nonce of: yy ```
+
 ## Deploy
 
 To build dapp for prod:
