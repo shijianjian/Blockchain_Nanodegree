@@ -194,7 +194,7 @@ contract FlightSuretyData {
                                 bool mode
                             )
                             external
-                            requireContractOwner
+                            requireAuthorizedCaller
     {
         operational = mode;
     }
@@ -392,7 +392,6 @@ contract FlightSuretyData {
                                 )
                                 external
                                 requireIsOperational
-                                requireAuthorizedCaller
     {
         for(uint i = 0; i < InsuredPassengers[passenger].insurances.length; i++){
             if (keccak256(abi.encodePacked(InsuredPassengers[passenger].insurances[i].flightNum)) != keccak256(abi.encodePacked(flight))) {
@@ -419,9 +418,7 @@ contract FlightSuretyData {
                             external
                             payable
                             requireIsOperational
-                            requireAuthorizedCaller
     {
-        // emit LogAddress(passenger);
         for(uint i = 0; i < InsuredPassengers[passenger].insurances.length; i++){
             if (keccak256(abi.encodePacked(InsuredPassengers[passenger].insurances[i].flightNum)) != keccak256(abi.encodePacked(flight))) {
                 continue;

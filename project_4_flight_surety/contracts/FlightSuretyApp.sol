@@ -5,7 +5,7 @@ pragma solidity >=0.4.24;
 // More info: https://www.nccgroup.trust/us/about-us/newsroom-and-events/blog/2018/november/smart-contract-insecurity-bad-arithmetic/
 
 import "../node_modules/openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "./FlightSuretyData.sol";
+// import "./FlightSuretyData.sol";
 
 /************************************************** */
 /* FlightSurety Smart Contract                      */
@@ -249,6 +249,7 @@ contract FlightSuretyApp {
                                 uint256 amount
                             )
                             external
+                            payable
                             requireIsOperational
     {
         flightSuretyData.pay.value(amount)(msg.sender, flight);
@@ -412,3 +413,27 @@ contract FlightSuretyApp {
 // endregion
 
 }
+
+
+/*********************DataContact Functions***********************/
+/**                                                       */
+/**********************************************************/
+contract FlightSuretyData {
+    function isOperational() public view returns(bool);
+    function setOperatingStatus(bool mode) external;
+
+    function registerAirline(address airline) public;
+    function isAirlineRegistered(address airline) external view returns(bool);
+    function fund(address airline) public payable;
+    function isAirlineFunded(uint256 minFunds, address airline) external view returns(bool);
+    function getNumOfRegisteredAirlines() external view returns(uint256);
+
+    function registerFlight(string flight, uint256 timestamp, address airline) public;
+    function isFlightRegistered(string flight, address airline) public view returns(bool);
+    function processFlightStatus(address airline, string flight, uint8 statusCode) external;
+
+    function buy(string flight, address passenger, address airline) external payable;
+    function creditInsurees(address passenger, string flight) external;
+    function pay(address passenger, string flight) external payable;
+}
+/**********************************************************/

@@ -229,10 +229,11 @@ contract('Flight Surety Tests', async (accounts) => {
 
       let before_p = web3.eth.getBalance(accounts[7]).toNumber();
       let before_c = web3.eth.getBalance(accounts[0]).toNumber();
-      await config.flightSuretyApp.payInsurees(flightNumber, amount, {from: accounts[7], gasPrice: 0});
+      // await config.flightSuretyApp.payInsurees(flightNumber, amount, {from: accounts[7], gasPrice: 0});
+      await config.flightSuretyData.pay(accounts[7], flightNumber, {value: amount, from: accounts[7], gasPrice: 0})
       let after_p = web3.eth.getBalance(accounts[7]).toNumber();
       let after_c = web3.eth.getBalance(accounts[0]).toNumber();
-      assert.equal(before_p - after_p, amount, "Passenger recieved error");
       assert.equal(after_c - before_c, amount, "Contract did not pay");
+      assert.equal(before_p - after_p, amount, "Passenger recieved error");
     });
 });
