@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity >=0.4.24;
 
 import "../node_modules/openzeppelin-solidity/contracts/math/SafeMath.sol";
 
@@ -402,11 +402,11 @@ contract FlightSuretyData {
                 InsuredPassengers[passenger].insurances[i].status = InsuranceState.Credit;
                 InsuredPassengers[passenger].insurances[i].payoutAmount = InsuredPassengers[passenger].insurances[i].amount.mul(15).div(10);
                 emit CreditPassenger(passenger, InsuredPassengers[passenger].insurances[i].payoutAmount);
+                break;
             }
         }
     }
-    event LogInt(uint256);
-    event LogAddress(address);
+
     /**
      *  @dev Transfers eligible payout funds to insuree
      *
@@ -414,11 +414,12 @@ contract FlightSuretyData {
     function pay
                             (
                                 address passenger,
-                                string flight,
-                                uint256 amount
+                                string flight
                             )
                             external
+                            payable
                             requireIsOperational
+                            requireAuthorizedCaller
     {
         // emit LogAddress(passenger);
         for(uint i = 0; i < InsuredPassengers[passenger].insurances.length; i++){
@@ -427,11 +428,12 @@ contract FlightSuretyData {
             }
             if (InsuredPassengers[passenger].insurances[i].status == InsuranceState.Credit){
                 InsuredPassengers[passenger].insurances[i].status = InsuranceState.Claimed;
-                require(amount <= InsuredPassengers[passenger].insurances[i].payoutAmount, "Not enough allowance.");
-                passenger.transfer(amount);
+                require(msg.value <= InsuredPassengers[passenger].insurances[i].payoutAmount, "Not enough allowance.");
+                contractOwner.transfer(msg.value);
                 emit PayPassenger(passenger, InsuredPassengers[passenger].insurances[i].payoutAmount);
-                // Reset waiting payment to 0
-                InsuredPassengers[passenger].insurances[i].payoutAmount = 0;
+                // Reset waiting allowance.
+                InsuredPassengers[passenger].insurances[i].payoutAmount -= msg.value;
+                break;
             }
         }
     }

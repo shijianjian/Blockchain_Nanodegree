@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity >=0.4.24;
 
 // It's important to avoid vulnerabilities due to numeric overflow bugs
 // OpenZeppelin's SafeMath library, when used correctly, protects agains such bugs
@@ -251,7 +251,7 @@ contract FlightSuretyApp {
                             external
                             requireIsOperational
     {
-        flightSuretyData.pay(msg.sender, flight, amount);
+        flightSuretyData.pay.value(amount)(msg.sender, flight);
     }
 
 
@@ -326,8 +326,9 @@ contract FlightSuretyApp {
         return oracles[msg.sender].indexes;
     }
 
-
-
+    function getRegistrationFee() external pure returns(uint256) {
+        return REGISTRATION_FEE;
+    }
 
     // Called by oracle when a response is available to an outstanding request
     // For the response to be accepted, there must be a pending request that is open
