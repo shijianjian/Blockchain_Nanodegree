@@ -29,26 +29,26 @@ import './flightsurety.css';
             display('display-status', 'Operational Status', 'Check if contract is operational', [{ label: 'Operational Status', error: error, value: JSON.stringify(result) }]);
         });
 
-        display('flights-wrapper', 'Flights', 'Available Flights', [{ label: 'Flights', value: JSON.stringify(FLIGHTS, null, '\t') }]);
+        display('flights-wrapper', 'Flights', 'Available Flights', [{ label: 'Flights', value: FLIGHTS}]);
 
         // Watch Events
         contract.onEventAirlineRegistered((error, result) => {
             displayResult('Airline Registration', airline + ' : ' + result);
         });
         contract.onEventAirlineFunded((error, result) => {
-            displayResult('Airline Funding', JSON.stringify(result));
+            displayResult('Airline Funding', result);
         });
         contract.onEventFlightRegistered((error, result) => {
-            displayResult('Flight Registered', JSON.stringify(result));
+            displayResult('Flight Registered', result);
         });
         contract.onEventInsurancePurchased((error, result) => {
-            display('insurance-wrapper', 'Insurance Purchased', '', [{ label: 'Passengers insurance', error: error, value: JSON.stringify(result) }]);
+            display('insurance-wrapper', 'Insurance Purchased', '', [{ label: 'Passengers insurance', error: error, value: result }]);
         });
 
 
         // Read transaction
         contract.fetchFlightInfo((error, result) => {
-            display('display-wrapper', 'Flight Info', '', [{ label: 'Flight Info', error: error, value: JSON.stringify(result) }]);
+            display('display-wrapper', 'Flight Info', '', [{ label: 'Flight Info', error: error, value: result }]);
         });
 
 
@@ -60,7 +60,7 @@ import './flightsurety.css';
             // Write transaction
             contract.fetchFlightStatus(airline, flight, timestamp, (error, result) => {
                 console.log(result);
-                display('display-wrapper', 'Oracles', 'Trigger oracles', [{ label: 'Fetch Flight Status', error: error, value: JSON.stringify(result) }]);
+                display('display-wrapper', 'Oracles', 'Trigger oracles', [{ label: 'Fetch Flight Status', error: error, value: result }]);
             });
         });
 
@@ -97,7 +97,7 @@ import './flightsurety.css';
                     if (error) {
                         displayResult('Flights Registration', '', error);
                     } else {
-                        display('flights-wrapper', 'Flights', 'Register Flights', [{ label: 'Flight', error: error, value: JSON.stringify(result) }]);
+                        display('flights-wrapper', 'Flights', 'Register Flights', [{ label: 'Flight', error: error, value: result }]);
                     }
                 });
             });
@@ -152,7 +152,11 @@ function displayResult(title, result, error) {
     let resultP = DOM.elid('global-result');
     resultP.innerHTML = '';
     if (result) {
-        resultP.innerHTML = 'Tx ID : ' + result;
+        if (typeof result == 'object') {
+            resultP.appendChild(DOM.pre({ className: 'col-sm-8 field-value' }, JSON.stringify(result, undefined, 2)));
+        } else {
+            resultP.innerHTML = 'Tx ID : ' + result;
+        }
     }
 
     let errorP = DOM.elid('global-error');
@@ -171,7 +175,12 @@ function display(id, title, description, results) {
     results.map((result) => {
         let row = section.appendChild(DOM.div({ className: 'row' }));
         row.appendChild(DOM.div({ className: 'col-sm-4 field' }, result.label));
-        row.appendChild(DOM.div({ className: 'col-sm-8 field-value' }, result.error ? String(result.error) : String(result.value)));
+        console.log(result.value)
+        if (typeof result.value === 'object') {
+            row.appendChild(DOM.pre({ className: 'col-sm-8 field-value' }, result.error ? String(result.error) : String(JSON.stringify(result.value, undefined, 2))));
+        } else {
+            row.appendChild(DOM.div({ className: 'col-sm-8 field-value' }, result.error ? String(result.error) : String(result.value)));
+        }
         section.appendChild(row);
     })
     displayDiv.append(section);
