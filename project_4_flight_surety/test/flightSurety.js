@@ -173,38 +173,41 @@ contract('Flight Surety Tests', async (accounts) => {
     const amount = web3.toWei("1");
     let flightNumber = "UA142";
     let before_p = web3.eth.getBalance(accounts[7]).toNumber();
+    let before_c = (await config.flightSuretyData.getAddressBalance({from: config.owner})).toNumber();
     await config.flightSuretyApp.buyInsurance(config.firstAirline, flightNumber, {from: accounts[7], value: amount, gasPrice: 0});
     let after_p = web3.eth.getBalance(accounts[7]).toNumber();
+    let after_c = (await config.flightSuretyData.getAddressBalance({from: config.owner})).toNumber();
 
     let insurance = await config.flightSuretyData.getInsuranceAmount(accounts[7], flightNumber);
     const resultInsurance = web3.toWei(insurance, "wei");
     assert.equal(resultInsurance.toNumber(), amount, "Insurance bought did not work");
     assert.equal(before_p - after_p, amount, "Passenger paid error");
+    assert.equal(after_c - before_c, amount, "Contract recieved error");
    });
 
-    it('(passenger) Credit flight insurance', async () => {
+  it('(passenger) Credit flight insurance', async () => {
 
-      const payoutAmount = web3.toWei("1.5");
-      let flightNumber = "UA142";
-      await config.flightSuretyApp.creditInsurees(accounts[7], flightNumber, {from: config.firstAirline});
+    const payoutAmount = web3.toWei("1.5");
+    let flightNumber = "UA142";
+    await config.flightSuretyApp.creditInsurees(accounts[7], flightNumber, {from: config.firstAirline});
 
-      let insurance = await config.flightSuretyData.getInsurancePayoutAmount(accounts[7], flightNumber);
-      const resultInsurance = web3.toWei(insurance, "wei");
-      assert.equal(resultInsurance.toNumber(), payoutAmount, "Insurance credit does not work");
-    });
+    let insurance = await config.flightSuretyData.getInsurancePayoutAmount(accounts[7], flightNumber);
+    const resultInsurance = web3.toWei(insurance, "wei");
+    assert.equal(resultInsurance.toNumber(), payoutAmount, "Insurance credit does not work");
+  });
 
-    it('(passenger) Withdraw flight insurance', async () => {
+  it('(passenger) Withdraw flight insurance', async () => {
 
-      let flightNumber = "UA142";
-      let amount = web3.toWei("0.5");
+    let flightNumber = "UA142";
+    let amount = web3.toWei("0.5");
 
-      let before_p = web3.eth.getBalance(accounts[7]).toNumber();
-      // let before_c = web3.eth.getBalance(accounts[0]).toNumber();
-      await config.flightSuretyApp.payInsurees(flightNumber, amount, {from: accounts[7], gasPrice: 0});
-      // await config.flightSuretyData.pay(accounts[7], flightNumber, amount, {from: accounts[7], gasPrice: 0})
-      let after_p = web3.eth.getBalance(accounts[7]).toNumber();
-      // let after_c = web3.eth.getBalance(accounts[0]).toNumber();
-      // assert.equal(after_c - before_c, amount, "Contract did not pay");
-      assert.equal(after_p - before_p, amount, "Passenger recieved error");
-    });
+    let before_p = web3.eth.getBalance(accounts[7]).toNumber();
+    let before_c = (await config.flightSuretyData.getAddressBalance({from: config.owner})).toNumber();
+    await config.flightSuretyApp.payInsurees(flightNumber, amount, {from: accounts[7], gasPrice: 0});
+    let after_p = web3.eth.getBalance(accounts[7]).toNumber();
+    let after_c = (await config.flightSuretyData.getAddressBalance({from: config.owner})).toNumber();
+
+    assert.equal(before_c - after_c, amount, "Contract did not pay");
+    assert.equal(after_p - before_p, amount, "Passenger recieved error");
+  });
 });

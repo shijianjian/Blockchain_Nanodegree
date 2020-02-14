@@ -62,9 +62,15 @@ export default class Contract {
         console.log('buyInsurance', airline, flight);
         self.flightSuretyApp.methods
             .buyInsurance(airline, flight)
-            .send({ from: passenger, value: amount, gas: 4712388, gasPrice: 100000000000 }, (error, result) => {
-                callback(error, result);
-            });
+            .send({
+                    from: passenger,
+                    value: web3.toWei(amount.toString(), 'ether'),
+                    gas: 4712388,
+                    gasPrice: 100000000000
+                }, (error, result) => {
+                    callback(error, result);
+                }
+            );
     }
 
     fundAirline(airline, seedFund, callback) {

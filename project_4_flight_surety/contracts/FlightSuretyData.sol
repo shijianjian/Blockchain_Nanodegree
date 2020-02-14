@@ -200,9 +200,9 @@ contract FlightSuretyData {
         operational = mode;
     }
 
-    function getAddressBalance() public view requireIsOperational returns(uint balance)
+    function getAddressBalance() public view requireContractOwner returns(uint balance)
     {
-        return address(contractOwner).balance;
+        return address(this).balance;
     }
     /********************************************************************************************/
     /*                                     SMART CONTRACT FUNCTIONS                             */
@@ -450,8 +450,6 @@ contract FlightSuretyData {
                             requireIsOperational
     {
         RegisteredAirlines[airline].isFunded = true;
-        // address payable airlinePayable = address(uint160(bytes20(airline)));
-        contractOwner.transfer(msg.value);
         AirlineFunds[airline] = msg.value;
         emit Fund(msg.value);
     }
@@ -481,4 +479,3 @@ contract FlightSuretyData {
 
 
 }
-
