@@ -26,7 +26,6 @@ contract FlightSuretyData {
     struct Airline {
         bool isRegistered;
         bool isFunded;
-        address airlineAddress;
     }
 
     mapping(address => Airline) public RegisteredAirlines;
@@ -70,6 +69,7 @@ contract FlightSuretyData {
     event FlightRegistered(bytes32 key, address airline, string flight);
     event InsuranceWithdrawed(address passenger, uint256 payout);
     event AirlineRegistered(address airline, uint256 registered);
+    event InsurancePurchased(address from, address to, uint256 amount);
 
     /**
     * @dev Constructor
@@ -82,6 +82,7 @@ contract FlightSuretyData {
                                 payable
     {
         contractOwner = msg.sender;
+        contractOwner.transfer(msg.value);
     }
 
     /********************************************************************************************/
@@ -194,7 +195,7 @@ contract FlightSuretyData {
                                 bool mode
                             )
                             external
-                            requireAuthorizedCaller
+                            requireContractOwner
     {
         operational = mode;
     }
@@ -230,7 +231,7 @@ contract FlightSuretyData {
                             requireIsOperational
     {
         require(!RegisteredAirlines[airline].isRegistered, "Airline is already registered.");
-        RegisteredAirlines[airline] = Airline({isRegistered: true, isFunded: false, airlineAddress: airline});
+        RegisteredAirlines[airline] = Airline({isRegistered: true, isFunded: false});
         registeredAddresses.push(airline);
         emit AirlineRegistered(airline, getNumOfRegisteredAirlines());
     }
@@ -337,9 +338,9 @@ contract FlightSuretyData {
                 require(true, "Insurance bought.");
             }
         }
-        contractOwner.transfer(msg.value);
         // Create new
         InsuredPassengers[passenger].insurances.push(ins);
+        emit InsurancePurchased(passenger, contractOwner, msg.value);
     }
 
     /**
@@ -413,10 +414,10 @@ contract FlightSuretyData {
     function pay
                             (
                                 address passenger,
-                                string flight
+                                string flight,
+                                uint256 amount
                             )
                             external
-                            payable
                             requireIsOperational
     {
         for(uint i = 0; i < InsuredPassengers[passenger].insurances.length; i++){
@@ -425,11 +426,11 @@ contract FlightSuretyData {
             }
             if (InsuredPassengers[passenger].insurances[i].status == InsuranceState.Credit){
                 InsuredPassengers[passenger].insurances[i].status = InsuranceState.Claimed;
-                require(msg.value <= InsuredPassengers[passenger].insurances[i].payoutAmount, "Not enough allowance.");
-                contractOwner.transfer(msg.value);
+                require(amount <= InsuredPassengers[passenger].insurances[i].payoutAmount, "Not enough allowance.");
+                passenger.transfer(amount);
                 emit PayPassenger(passenger, InsuredPassengers[passenger].insurances[i].payoutAmount);
                 // Reset waiting allowance.
-                InsuredPassengers[passenger].insurances[i].payoutAmount -= msg.value;
+                InsuredPassengers[passenger].insurances[i].payoutAmount -= amount;
                 break;
             }
         }

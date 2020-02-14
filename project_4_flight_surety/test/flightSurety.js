@@ -93,25 +93,6 @@ contract('Flight Surety Tests', async (accounts) => {
   it('(airline) cannot register an Airline using registerAirline() if the caller is not registered till 4 registered airlines - a', async () => {
     
     // ARRANGE
-    let newAirline = accounts[2];
-
-    // ACT
-    try {
-        await config.flightSuretyApp.registerAirline(newAirline, {from: newAirline});
-    }
-    catch(e) {
-
-    }
-    let result = await config.flightSuretyData.isAirlineRegistered.call(newAirline); 
-
-    // ASSERT
-    assert.equal(result, false, "Airline should not be able to register another airline if the caller is not registered");
-
-  });
- 
-  it('(airline) cannot register an Airline using registerAirline() if the caller is not registered till 4 registered airlines - b', async () => {
-    
-    // ARRANGE
     let newAirline = accounts[6];
     const funds = web3.toWei("10");
     await config.flightSuretyApp.topupFunds({from: config.firstAirline, value: funds});
@@ -132,18 +113,11 @@ contract('Flight Surety Tests', async (accounts) => {
     assert.equal(result, false, "Airline should not able to register airline if supponsors do not have enough funds.");
   });
  
-  it('(airline) cannot register an Airline using registerAirline() if the caller is not registered till 4 registered airlines - c', async () => {
+  it('(airline) cannot register an Airline using registerAirline() if the caller is not registered till 4 registered airlines - b', async () => {
     
     // ARRANGE
     let newAirline = accounts[6];
     const funds = web3.toWei("10");
-    // await config.flightSuretyApp.topupFunds({from: config.firstAirline, value: funds});
-    [
-        await config.flightSuretyApp.registerAirline(accounts[2], {from: config.firstAirline}),
-        await config.flightSuretyApp.registerAirline(accounts[3], {from: config.firstAirline}),
-        await config.flightSuretyApp.registerAirline(accounts[4], {from: config.firstAirline}),
-        await config.flightSuretyApp.registerAirline(accounts[5], {from: config.firstAirline}),
-    ];
 
     // ACT
     await config.flightSuretyApp.topupFunds({from: accounts[2], value: funds});
@@ -198,17 +172,14 @@ contract('Flight Surety Tests', async (accounts) => {
 
     const amount = web3.toWei("1");
     let flightNumber = "UA142";
-    let before_p = web3.eth.getBalance(accounts[7]).toNumber()
-    let before_c = web3.eth.getBalance(accounts[0]).toNumber()
+    let before_p = web3.eth.getBalance(accounts[7]).toNumber();
     await config.flightSuretyApp.buyInsurance(config.firstAirline, flightNumber, {from: accounts[7], value: amount, gasPrice: 0});
-    let after_p = web3.eth.getBalance(accounts[7]).toNumber()
-    let after_c = web3.eth.getBalance(accounts[0]).toNumber()
+    let after_p = web3.eth.getBalance(accounts[7]).toNumber();
 
     let insurance = await config.flightSuretyData.getInsuranceAmount(accounts[7], flightNumber);
     const resultInsurance = web3.toWei(insurance, "wei");
     assert.equal(resultInsurance.toNumber(), amount, "Insurance bought did not work");
     assert.equal(before_p - after_p, amount, "Passenger paid error");
-    assert.equal(after_c - before_c, amount, "Contract did not recieve");
    });
 
     it('(passenger) Credit flight insurance', async () => {
@@ -228,12 +199,12 @@ contract('Flight Surety Tests', async (accounts) => {
       let amount = web3.toWei("0.5");
 
       let before_p = web3.eth.getBalance(accounts[7]).toNumber();
-      let before_c = web3.eth.getBalance(accounts[0]).toNumber();
-      // await config.flightSuretyApp.payInsurees(flightNumber, amount, {from: accounts[7], gasPrice: 0});
-      await config.flightSuretyData.pay(accounts[7], flightNumber, {value: amount, from: accounts[7], gasPrice: 0})
+      // let before_c = web3.eth.getBalance(accounts[0]).toNumber();
+      await config.flightSuretyApp.payInsurees(flightNumber, amount, {from: accounts[7], gasPrice: 0});
+      // await config.flightSuretyData.pay(accounts[7], flightNumber, amount, {from: accounts[7], gasPrice: 0})
       let after_p = web3.eth.getBalance(accounts[7]).toNumber();
-      let after_c = web3.eth.getBalance(accounts[0]).toNumber();
-      assert.equal(after_c - before_c, amount, "Contract did not pay");
-      assert.equal(before_p - after_p, amount, "Passenger recieved error");
+      // let after_c = web3.eth.getBalance(accounts[0]).toNumber();
+      // assert.equal(after_c - before_c, amount, "Contract did not pay");
+      assert.equal(after_p - before_p, amount, "Passenger recieved error");
     });
 });

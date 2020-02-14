@@ -29,7 +29,7 @@ import './flightsurety.css';
             display('display-status', 'Operational Status', 'Check if contract is operational', [{ label: 'Operational Status', error: error, value: JSON.stringify(result) }]);
         });
 
-        display('flights-wrapper', 'Flights', 'Available Flights', [{ label: 'Flights', value: JSON.stringify(FLIGHTS) }]);
+        display('flights-wrapper', 'Flights', 'Available Flights', [{ label: 'Flights', value: JSON.stringify(FLIGHTS, null, '\t') }]);
 
         // Watch Events
         contract.onEventAirlineRegistered((error, result) => {
@@ -41,8 +41,8 @@ import './flightsurety.css';
         contract.onEventFlightRegistered((error, result) => {
             displayResult('Flight Registered', JSON.stringify(result));
         });
-        contract.onEventInsuranceCredited((error, result) => {
-            display('insurance-wrapper', 'Insurance Credited', '', [{ label: 'Passengers insurance', error: error, value: JSON.stringify(result) }]);
+        contract.onEventInsurancePurchased((error, result) => {
+            display('insurance-wrapper', 'Insurance Purchased', '', [{ label: 'Passengers insurance', error: error, value: JSON.stringify(result) }]);
         });
 
 
@@ -108,9 +108,16 @@ import './flightsurety.css';
             let flight = DOM.elid('flight-number').value;
             let select = DOM.elid('passenger-id');
             let passenger = select.options[select.selectedIndex].value;
-            let amount = DOM.elid('insurance-amount').value;;
+            let amount = DOM.elid('insurance-amount').value;
+
+            let timestamp;
+            for (let i=0; i<FLIGHTS.length; i++) {
+                if (FLIGHTS[i].flight == flight) {
+                    timestamp = FLIGHTS[0].timestamp;
+                }
+            }
             
-            contract.buyInsurance(airline, flight, FLIGHTS[0].timestamp, passenger, amount, (error, result) => {
+            contract.buyInsurance(airline, flight, timestamp, passenger, amount, (error, result) => {
                 console.log('buyInsurance : ', result, error);
                 if (error) {
                     displayResult('Insurance', '', error);
@@ -168,5 +175,4 @@ function display(id, title, description, results) {
         section.appendChild(row);
     })
     displayDiv.append(section);
-
 }

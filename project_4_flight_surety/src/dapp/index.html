@@ -31,35 +31,50 @@
         <div id="airlines-wrapper" class="top-20">
         </div>
         <h4>Register Airline</h4>
-        <div class="row top-20">
-            <label class="form">Register Airline (address)</label> <input type="text" value="" id="airline-address">
+        <div class="form-group">
+            <label for="airline-address">Register Airline (address)</label>
+            <input class="form-control" type="text" value="" id="airline-address">
             <btn class="btn btn-primary" id="register-airline">Register Airline</btn>
         </div>
 
-        <div class="row top-20">
-            <label class="form">Fund Airline(Ether)</label> <input type="text" value="" id="seed-funding">
+        <div class="form-group">
+            <label for="seed-airline" class="form">Fund Airline(Ether)</label>
+            <input class="form-control" type="text" value="" id="seed-funding">
             <btn class="btn btn-primary" id="fund-airline">Fund Airline</btn>
         </div>
 
-        <div id="flights-wrapper" class="top-20"></div>
+        <div id="flights-wrapper"></div>
         <btn class="btn btn-primary" id="get-flights">Register flights</btn>
-
-
         </div>
-        <div class="row top-20">
-            <label class="form">Purchase Insurance</label>
-            <input type="text" value="SV-NYC" id="flight-number">
-            <label>Amount(Ether)</label>
-            <input type="text" value="1" length="10" id="insurance-amount">
-            <select id="passenger-id">
-            </select>
-            <btn class="btn btn-primary" id="purchase-insurance">Purchase</btn>
+
+
+        <h4>Purchase Insurance</h4>
+        <div class="form-group">
+            <div class="form-group">
+                <label for="passenger-id">Select Passenger</label>
+                <select class="form-control" id="passenger-id">
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="flight-number">Flight Number</label>
+                <input type="text" value="SV-NYC" class="form-control" id="flight-number">
+            </div>
+            <div class="form-group">
+                <label for="insurance-amount">Amount(Ether)</label>
+                <input type="text" value="1" length="10" class="form-control" id="insurance-amount">
+            </div>
+            <div class="form-group">
+                <btn class="btn btn-primary" id="purchase-insurance">Purchase</btn>
+            </div>
         </div>
 
         <h4>Oracles</h4>
-        <div class="row top-20">
-            <label class="form">Flight</label> <input type="text" id="flight-number">
+        <div class="form-group">
+            <label for="flight-number">Flight</label>
+            <input class="form-control" type="text" id="flight-number">
+            <div class="form-group">
             <btn class="btn btn-primary" id="submit-oracle">Submit to Oracles</btn>
+            </div>
         </div>
         <div id="display-wrapper" class="top-20">
         </div>

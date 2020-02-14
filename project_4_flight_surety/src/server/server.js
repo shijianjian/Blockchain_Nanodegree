@@ -63,7 +63,6 @@ function initOracles(accounts) {
                     account: accounts[i]
                   }
                   registeredOracles.push(oracle);
-                  oracle = [];
                   console.log(`[INIT] Get Indexes ${i}`, accounts[i]);
                 }
             }).catch(e => reject(e)); 
@@ -77,10 +76,13 @@ function initOracles(accounts) {
 async function getOracelResponse(oracles, simulate) {
   console.log("[OracleRes] Number of oracles recieved:", oracles.length)
   if (simulate) {
+    console.log("[OracleRes] ======================");
+    console.log("[OracleRes] Simulating fetching from:", oracles[0].account, "to:", oracles[1].account);
+    console.log("[OracleRes] ======================");
     await flightSuretyApp.methods
       .fetchFlightStatus(oracles[0].account, "FAKER", Math.floor((Date.now() + 43200)/ 1000))
       .send({ from: oracles[1].account, gas: 200000 })
-      .catch(e => console.log(e))
+      .catch(e => console.log(e));
   }
   return new Promise((resolve, reject) => {
     flightSuretyApp.events.OracleRequest({
@@ -110,7 +112,7 @@ async function getOracelResponse(oracles, simulate) {
             // Submit Oracle Response
             await flightSuretyApp.methods
               .submitOracleResponse(payload.index, payload.airline, payload.flight, payload.timestamp, payload.statusCode)
-              .send({ from: oracles[idx].address, gas: 200000 }, (error, result) => {
+              .send({ from: oracles[idx].account, gas: 200000 }, (error, result) => {
                 if (error) {
                   console.log('[OracleRes] Tx error : ' + error.message);
                 } else {

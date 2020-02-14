@@ -182,22 +182,23 @@ export default class Contract {
         });
     }
 
-    onEventInsuranceCredited(callback) {
+    onEventInsurancePurchased(callback) {
         let self = this;
-        this.flightSuretyApp.events.InsureesCredited({
+        this.flightSuretyData.events.InsurancePurchased({
             fromBlock: "latest"
         }, function (error, event) {
             console.log('Event type is : ' + event.event)
             if (error) console.log('Error in reading event : ' + error)
             else {
-                if (event.event === 'InsureesCredited') {
+                if (event.event === 'InsurancePurchased') {
                     let result = {
                         event: event.event,
-                        passenger: event.returnValues.passenger,
-                        insurance: event.returnValues.insurance
+                        passenger: event.returnValues.from,
+                        airline: event.returnValues.to,
+                        insurance: event.returnValues.amount
                     }
                     callback(error, result);
-                    console.log('Event (InsuranceCredited) emited from smart contract : ' + JSON.stringify(event.returnValues))
+                    console.log('Event (InsurancePurchased) emited from smart contract : ' + JSON.stringify(event.returnValues))
                 }
             }
         });

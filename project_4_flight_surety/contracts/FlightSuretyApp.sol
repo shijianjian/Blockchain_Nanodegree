@@ -75,6 +75,12 @@ contract FlightSuretyApp {
         _;
     }
 
+    modifier requireAirlineNotRegistered(address airline)
+    {
+        require(flightSuretyData.isAirlineRegistered(airline) == false, "Airline is registered.");
+        _;
+    }
+
     /********************************************************************************************/
     /*                                       CONSTRUCTOR                                        */
     /********************************************************************************************/
@@ -121,6 +127,7 @@ contract FlightSuretyApp {
                             )
                             external
                             requireIsOperational
+                            requireAirlineNotRegistered(airline)
                             requireAirlineFunded
     {
         uint256 number = flightSuretyData.getNumOfRegisteredAirlines();
@@ -141,9 +148,8 @@ contract FlightSuretyApp {
             } else {
                 toRegister = false;
             }
-        } else {
-            require(flightSuretyData.isAirlineRegistered(msg.sender) == true, "Invalid caller.");
         }
+
         if (toRegister == true) {
             flightSuretyData.registerAirline(airline);
             emit AirlineRegisterSubmitted(airline);
@@ -249,10 +255,9 @@ contract FlightSuretyApp {
                                 uint256 amount
                             )
                             external
-                            payable
                             requireIsOperational
     {
-        flightSuretyData.pay.value(amount)(msg.sender, flight);
+        flightSuretyData.pay(msg.sender, flight, amount);
     }
 
 
@@ -434,6 +439,6 @@ contract FlightSuretyData {
 
     function buy(string flight, address passenger, address airline) external payable;
     function creditInsurees(address passenger, string flight) external;
-    function pay(address passenger, string flight) external payable;
+    function pay(address passenger, string flight, uint256 amount) external payable;
 }
 /**********************************************************/
