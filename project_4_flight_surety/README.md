@@ -3,8 +3,8 @@
 FlightSurety is a sample application project for Udacity's Blockchain course.
 
 ## Requirements
-Truffle v4.1.15 (core: 4.1.15)
-Solidity v0.4.25 (solc-js)
+- Truffle v4.1.15 (core: 4.1.15)
+- Solidity v0.4.25 (solc-js)
 
 ## Install
 
@@ -26,6 +26,8 @@ $ truffle test ./test/flightSurety.js
 $ truffle test ./test/oracles.js
 ```
 
+![test](./miscs/test1.png)
+
 To use the dapp:
 
 ```bash
@@ -42,9 +44,14 @@ To view dapp:
 ```bash
 $ truffle migrate --reset
 $ npm run server
-$ truffle test ./test/oracles.js
 ```
-Increase the number of accounts to 40 in Ganache to test. HDWalletProvider cannot be used for an error of ```the tx doesn't have the correct nonce. account has nonce of: xx tx has nonce of: yy ```
+
+![server](./miscs/server.png)
+
+Tips:
+Increase the number of accounts to 40 in Ganache to test.
+
+HDWalletProvider cannot be used for an error of ```the tx doesn't have the correct nonce. account has nonce of: xx tx has nonce of: yy ```
 
 ## Deploy
 
@@ -53,14 +60,4 @@ To build dapp for prod:
 
 Deploy the contents of the ./dapp folder
 
-
-## Resources
-
-* [How does Ethereum work anyway?](https://medium.com/@preethikasireddy/how-does-ethereum-work-anyway-22d1df506369)
-* [BIP39 Mnemonic Generator](https://iancoleman.io/bip39/)
-* [Truffle Framework](http://truffleframework.com/)
-* [Ganache Local Blockchain](http://truffleframework.com/ganache/)
-* [Remix Solidity IDE](https://remix.ethereum.org/)
-* [Solidity Language Reference](http://solidity.readthedocs.io/en/v0.4.24/)
-* [Ethereum Blockchain Explorer](https://etherscan.io/)
-* [Web3Js Reference](https://github.com/ethereum/wiki/wiki/JavaScript-API)
+![dapp](./miscs/dapp.png)
