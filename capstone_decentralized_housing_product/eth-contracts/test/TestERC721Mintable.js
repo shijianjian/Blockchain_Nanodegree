@@ -35,7 +35,7 @@ contract('TestERC721Mintable', accounts => {
 
         it('should transfer token from one owner to another', async function () { 
             assert.equal(await this.contract.ownerOf(token_one), account_one);
-            await this.contract.safeTransferFrom.call(account_one, account_two, token_one, {from: account_one});
+            await this.contract.safeTransferFrom(account_one, account_two, token_one, {from: account_one});
             assert.equal(await this.contract.ownerOf(token_one), account_two);
         })
     });
