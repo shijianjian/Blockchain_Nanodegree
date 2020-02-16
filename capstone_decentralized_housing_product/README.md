@@ -6,7 +6,7 @@ The capstone will build upon the knowledge you have gained in the course in orde
 - Rinkeby:
     - SolnSquareVerifier Address: 0x883b83a382749ff45498f14946B67Bbd020cd3BA
     - Verifier Address: 0x5e69DFaE403C76983BFF56BeCd88743aff7a98b2
-
+- OpenSea: https://rinkeby.opensea.io/assets/0x883b83a382749ff45498f14946b67bbd020cd3ba/0
 
 ## Run
 - Deploy on rinkeby:
@@ -20,6 +20,9 @@ The capstone will build upon the knowledge you have gained in the course in orde
     ```
     Dry run can also be skipped by setting ```skipDryRun: true``` in ```config-truffle.json```.
 
+- Minting can be done by either ```mint.js``` or [MEW](https://www.myetherwallet.com/).
+    - For mint.js, overwrite the credentials then simply ```node mint.js```.
+    - For MEW, run ```node abi_gen.js``` to get the ```abi.json``` to get the ABI first for the further steps.
 
 ### Appendix: Working with Zokrates
 - Start
